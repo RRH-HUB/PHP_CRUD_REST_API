@@ -1,24 +1,29 @@
 <?php
-require '../class/user.php';
-
 $method=$_SERVER['REQUEST_METHOD'];
-
+header("Content-Type: application/json");
+include_once '../entities/User.php';
 switch ($method){
     case 'POST':
         $_POST= json_decode(file_get_contents('php://input'), true);
-        echo "crear ".$_POST['name'];
+        $user=new User($_POST["name"], $_POST["age"], $_POST["email"]);
+        $user->guardarUsuario();
+        $result['Response']="Guardar el usuario ".json_encode($_POST);
+        echo json_encode($result);
         break;
     case 'GET':
         if (isset($_GET['id'])){
-                echo "datos".$_GET['id'];
-                echo "leer 1 usuario";
+            $result['Response']="Obtener el usuario ".$_GET['id'];
+            echo json_encode($result);
         }else{
-            echo "listar usuarios";
+            $result['Response']="Devolver todos los usuarios ";
+            echo json_encode($result);
         }
         break;
     case 'PUT':
         $_Put= json_decode(file_get_contents('php://input'), true);
-        echo "actualizar usuario".$_GET['id'];
+        $result['Response']="actualizar el usuario ".$_GET['id'].
+            "Con la informacion".json_encode($_PUT);
+        echo json_encode($result);
         break;
     case 'DELETE':
         echo "borrar user".$_GET['id'];
