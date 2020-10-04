@@ -38,19 +38,85 @@ class User {
         $this->email = $email;
     }
 
-    public function guardarUsuario() {
+    public function saveUser() {
         $connection = new Db();
         $dbAcces = $connection->connect();
         $name = $this->name;
         $age = $this->age;
         $email = $this->email;
 
-        $sentencia = $dbAcces->prepare("INSERT INTO user (name, email, age) VALUES (:name, :email, :age)");
-        $sentencia->bindParam(':name', $name);
-        $sentencia->bindParam(':email', $email);
-        $sentencia->bindParam(':age', $age);
-        
-        $sentencia->execute();
+        $statement = $dbAcces->prepare("INSERT INTO user (name, email, age) VALUES (:name, :email, :age)");
+        $statement->bindParam(':name', $name);
+        $statement->bindParam(':email', $email);
+        $statement->bindParam(':age', $age);
+
+        $statement->execute();
+
+        $statement = null;
+        $dbAcces = null;
+    }
+
+    public static function getUser($id) {
+        $connection = new Db();
+
+        $dbAcces = $connection->connect();
+        $id;
+
+        $statement = $dbAcces->prepare("SELECT * FROM user WHERE id = (:id)");
+        $statement->bindParam(':id', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+
+        $userObtained = array();
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $userObtained['user'][] = $row;
+        }
+
+        return $userObtained;
+        $statement = null;
+        $dbAcces = null;
+    }
+
+    public static function getAllUsers() {
+        $connection = new Db();
+
+        $dbAcces = $connection->connect();
+
+        $statement = $dbAcces->prepare("SELECT * FROM user ");
+
+        $statement->execute();
+
+        $usersObtained = array();
+
+        while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
+            $usersObtained['users'][] = $row;
+        }
+
+        return $usersObtained;
+        $statement = null;
+        $dbAcces = null;
+    }
+
+    public static function updateUser($_PUT) {
+        $connection = new Db();
+
+        $dbAcces = $connection->connect();
+
+        $statement = $dbAcces->prepare("INSERT INTO (name,email,age) VALUES (:name,:email,:age) WHERE id=(:id) ");
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $email = $_POST['email'];
+        $age = $_POST['age'];
+
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
+        $statement->bindParam(':name', $id, PDO::PARAM_STR);
+        $statement->bindParam(':email', $id, PDO::PARAM_STR);
+        $statement->bindParam(':age', $id, PDO::PARAM_STR);
+
+        $statement->execute();
+
+        $statement = null;
+        $dbAcces = null;
     }
 
 }

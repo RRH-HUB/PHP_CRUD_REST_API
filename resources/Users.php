@@ -1,32 +1,40 @@
 <?php
-$method=$_SERVER['REQUEST_METHOD'];
+
+$method = $_SERVER['REQUEST_METHOD'];
 header("Content-Type: application/json");
 include_once '../entities/User.php';
-switch ($method){
+
+
+switch ($method) {
     case 'POST':
-        $_POST= json_decode(file_get_contents('php://input'), true);
-        $user=new User($_POST["name"], $_POST["age"], $_POST["email"]);
-        $user->guardarUsuario();
-        $result['Response']="Guardar el usuario ".json_encode($_POST);
+
+        $_POST = json_decode(file_get_contents('php://input'), true);
+        $user = new User($_POST["name"], $_POST["age"], $_POST["email"]);
+        $user->saveUser();
+        $result = $_POST;
         echo json_encode($result);
         break;
+    
     case 'GET':
-        if (isset($_GET['id'])){
-            $result['Response']="Obtener el usuario ".$_GET['id'];
-            echo json_encode($result);
-        }else{
-            $result['Response']="Devolver todos los usuarios ";
-            echo json_encode($result);
+        
+        if (isset($_GET['id'])) {
+            $userObtained = User::getUser((int) $_GET['id']);
+            echo json_encode($userObtained);
+        } else {
+            $usersObtained = User::getAllUsers();
+            echo json_encode($usersObtained);
         }
         break;
+        
     case 'PUT':
-        $_Put= json_decode(file_get_contents('php://input'), true);
-        $result['Response']="actualizar el usuario ".$_GET['id'].
-            "Con la informacion".json_encode($_PUT);
-        echo json_encode($result);
+        User::updateUser($_POST);
+
+        echo "exito";
         break;
+    
     case 'DELETE':
-        echo "borrar user".$_GET['id'];
+        
+        echo "borrar user" . $_GET['id'];
         break;
     default :
         echo "null";
