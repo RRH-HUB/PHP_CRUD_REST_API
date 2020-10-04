@@ -60,7 +60,7 @@ class User {
         $connection = new Db();
 
         $dbAcces = $connection->connect();
-        $id;
+ 
 
         $statement = $dbAcces->prepare("SELECT * FROM user WHERE id = (:id)");
         $statement->bindParam(':id', $id, PDO::PARAM_STR);
@@ -97,21 +97,23 @@ class User {
         $dbAcces = null;
     }
 
-    public static function updateUser($_PUT) {
+    public static function updateUser($json) {
         $connection = new Db();
-
         $dbAcces = $connection->connect();
+        
+        $dataBody= json_decode($json,true);
+        
+        $statement = $dbAcces->prepare("UPDATE user SET name=:name, email=:email, age=:age WHERE id=:id ");
 
-        $statement = $dbAcces->prepare("INSERT INTO (name,email,age) VALUES (:name,:email,:age) WHERE id=(:id) ");
-        $id = $_POST['id'];
-        $name = $_POST['name'];
-        $email = $_POST['email'];
-        $age = $_POST['age'];
+        $id=$dataBody['id'];
+        $name = $dataBody['name'];
+        $email = $dataBody['email'];
+        $age = $dataBody['age'];
 
         $statement->bindParam(':id', $id, PDO::PARAM_INT);
-        $statement->bindParam(':name', $id, PDO::PARAM_STR);
-        $statement->bindParam(':email', $id, PDO::PARAM_STR);
-        $statement->bindParam(':age', $id, PDO::PARAM_STR);
+        $statement->bindParam(':name', $name, PDO::PARAM_STR);
+        $statement->bindParam(':email', $email, PDO::PARAM_STR);
+        $statement->bindParam(':age', $age, PDO::PARAM_INT);
 
         $statement->execute();
 

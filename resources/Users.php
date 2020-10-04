@@ -27,8 +27,8 @@ switch ($method) {
         break;
         
     case 'PUT':
-        User::updateUser($_POST);
-
+        $body = file_get_contents("php://input");
+        User::updateUser($body);
         echo "exito";
         break;
     
