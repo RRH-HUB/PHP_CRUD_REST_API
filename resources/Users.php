@@ -29,21 +29,24 @@ switch ($method) {
     case 'PUT':
         $body = file_get_contents("php://input");
         User::updateUser($body);
-        echo "exito";
+        echo "succes";
         break;
     
     case 'DELETE':
+        $body = file_get_contents("php://input");
         
-        echo "borrar user" . $_GET['id'];
+        User::deleteUser($body);
+            
+        echo "delete user";
         break;
     default :
         echo "null";
         break;
 }
 /*
- * crear users               POST        /user
+ * crear users               POST        /user/{json de usuario}
  * leer 1 users              GET         /user/{id}
- * leer todos los users      GET         /user
- * actualizar users          PUT         /user/{id}
+ * leer todos los users      GET         /user/listAll
+ * actualizar users          PUT         /user/{json con usuario }
  * delete users              DELETE      /user/{id}
  */

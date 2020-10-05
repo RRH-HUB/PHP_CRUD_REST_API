@@ -60,7 +60,7 @@ class User {
         $connection = new Db();
 
         $dbAcces = $connection->connect();
- 
+
 
         $statement = $dbAcces->prepare("SELECT * FROM user WHERE id = (:id)");
         $statement->bindParam(':id', $id, PDO::PARAM_STR);
@@ -100,12 +100,12 @@ class User {
     public static function updateUser($json) {
         $connection = new Db();
         $dbAcces = $connection->connect();
-        
-        $dataBody= json_decode($json,true);
-        
+
+        $dataBody = json_decode($json, true);
+
         $statement = $dbAcces->prepare("UPDATE user SET name=:name, email=:email, age=:age WHERE id=:id ");
 
-        $id=$dataBody['id'];
+        $id = $dataBody['id'];
         $name = $dataBody['name'];
         $email = $dataBody['email'];
         $age = $dataBody['age'];
@@ -114,6 +114,24 @@ class User {
         $statement->bindParam(':name', $name, PDO::PARAM_STR);
         $statement->bindParam(':email', $email, PDO::PARAM_STR);
         $statement->bindParam(':age', $age, PDO::PARAM_INT);
+
+        $statement->execute();
+
+        $statement = null;
+        $dbAcces = null;
+    }
+
+    public static function deleteUser($json) {
+        $connection = new Db();
+        $dbAcces = $connection->connect();
+
+        $dataBody = json_decode($json, true);
+        
+        $statement = $dbAcces->prepare("DELETE FROM user WHERE id=:id ");
+        
+        $id = $dataBody['id'];
+
+        $statement->bindParam(':id', $id, PDO::PARAM_INT);
 
         $statement->execute();
 
